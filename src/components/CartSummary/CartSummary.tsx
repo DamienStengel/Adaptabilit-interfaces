@@ -1,5 +1,6 @@
 import React from 'react'
-import CartItem from './CartItem'
+import CartItem from '../CartItem/CartItem'
+import './CartSummary.scss'
 
 interface Item {
   id: string
@@ -14,13 +15,13 @@ interface CartSummaryProps {
   onDeleteItem: (id: string) => void
 }
 
-const CartSummary: React.FC<CartSummaryProps> = ({ items, onDeleteItem }) => {
+const CartSummary = ({ items, onDeleteItem }: CartSummaryProps) => {
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
   const reduction = 0
   const total = subtotal - reduction
 
   return (
-    <div>
+    <div className="cart-summary-container">
       <div className="cart-items">
         {items.map(item => (
           <CartItem 

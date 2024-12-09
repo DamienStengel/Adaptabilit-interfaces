@@ -1,6 +1,6 @@
 import React from 'react'
 import { FaCreditCard, FaIdCard } from 'react-icons/fa'
-import CartSummary from './CartSummary'
+import CartSummary from './CartSummary/CartSummary'
 
 interface Item {
   id: string
@@ -12,10 +12,10 @@ interface Item {
 
 interface CartProps {
   items: Item[]
-  setCartItems: React.Dispatch<React.SetStateAction<Item[]>>
+  setCartItems: (items: Item[]) => void
 }
 
-const Cart: React.FC<CartProps> = ({ items, setCartItems }) => {
+const Cart = ({ items, setCartItems }: CartProps) => {
   const handleDeleteItem = (id: string) => {
     setCartItems(prev => prev.filter(item => item.id !== id))
   }

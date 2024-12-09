@@ -1,5 +1,6 @@
 import React from 'react'
 import { FaTrash } from 'react-icons/fa'
+import './CartItem.scss'
 
 interface Item {
   id: string
@@ -14,7 +15,7 @@ interface CartItemProps {
   onDelete: (id: string) => void
 }
 
-const CartItem: React.FC<CartItemProps> = ({ item, onDelete }) => {
+const CartItem = ({ item, onDelete }: CartItemProps) => {
   return (
     <div className="cart-item">
       <div className="item-image">{item.image}</div>

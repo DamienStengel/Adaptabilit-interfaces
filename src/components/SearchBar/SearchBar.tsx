@@ -1,5 +1,6 @@
 import React from 'react'
 import { FaSearch } from 'react-icons/fa'
+import './SearchBar.scss'
 
 interface SearchBarProps {
   value: string
@@ -7,11 +8,11 @@ interface SearchBarProps {
   placeholder?: string
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ 
+const SearchBar = ({ 
   value, 
   onChange, 
   placeholder = "Rechercher..." 
-}) => {
+}: SearchBarProps) => {
   return (
     <div className="search-container">
       <FaSearch className="search-icon" />

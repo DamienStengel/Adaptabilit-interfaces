@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Navigation from './components/Navigation'
 import ProductGrid from './components/ProductGrid'
 import Cart from './components/Cart'
-import SearchBar from './components/SearchBar'
+import SearchBar from './components/SearchBar/SearchBar'
 
 interface Item {
   id: string
