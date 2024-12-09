@@ -11,18 +11,23 @@ interface Item {
 
 interface CartSummaryProps {
   items: Item[]
+  onDeleteItem: (id: string) => void
 }
 
-const CartSummary: React.FC<CartSummaryProps> = ({ items }) => {
+const CartSummary: React.FC<CartSummaryProps> = ({ items, onDeleteItem }) => {
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
-  const reduction = 0 // À implémenter selon les règles de réduction
+  const reduction = 0
   const total = subtotal - reduction
 
   return (
     <div>
       <div className="cart-items">
         {items.map(item => (
-          <CartItem key={item.id} item={item} />
+          <CartItem 
+            key={item.id} 
+            item={item} 
+            onDelete={onDeleteItem}
+          />
         ))}
       </div>
 

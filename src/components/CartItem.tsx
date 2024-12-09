@@ -1,4 +1,5 @@
 import React from 'react'
+import { FaTrash } from 'react-icons/fa'
 
 interface Item {
   id: string
@@ -10,9 +11,10 @@ interface Item {
 
 interface CartItemProps {
   item: Item
+  onDelete: (id: string) => void
 }
 
-const CartItem: React.FC<CartItemProps> = ({ item }) => {
+const CartItem: React.FC<CartItemProps> = ({ item, onDelete }) => {
   return (
     <div className="cart-item">
       <div className="item-image">{item.image}</div>
@@ -24,6 +26,13 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
         </div>
         <div className="item-price">{(item.price * item.quantity).toFixed(2)}€</div>
       </div>
+      <button 
+        className="delete-button"
+        onClick={() => onDelete(item.id)}
+        aria-label="Supprimer l'article"
+      >
+        <FaTrash />
+      </button>
     </div>
   )
 }
