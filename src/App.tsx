@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Navigation from './components/Navigation'
 import ProductGrid from './components/ProductGrid'
 import Cart from './components/Cart'
+import SearchBar from './components/SearchBar'
 
 interface Item {
   id: string
@@ -30,6 +31,10 @@ const App: React.FC = () => {
     })
   }
 
+  const handleSearch = (value: string) => {
+    setSearchQuery(value)
+  }
+
   return (
     <div className="app-container">
       <Navigation 
@@ -37,14 +42,11 @@ const App: React.FC = () => {
         setActiveCategory={setActiveCategory}
       />
       <div className="main-content">
-        <div className="search-bar">
-          <input 
-            type="text" 
-            placeholder="Rechercher un produit..." 
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
+        <SearchBar 
+          value={searchQuery}
+          onChange={handleSearch}
+          placeholder="Rechercher un produit..."
+        />
         <ProductGrid 
           category={activeCategory}
           searchQuery={searchQuery}

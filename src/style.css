@@ -70,17 +70,40 @@ body {
   padding: 1rem;
 }
 
-.search-bar {
+.search-container {
+  position: relative;
   padding: 1rem;
   background-color: var(--white);
   border-bottom: 1px solid #eee;
+  margin-right: 1rem;
 }
 
-.search-bar input {
+.search-input {
   width: 100%;
-  padding: 0.8rem;
-  border: 2px solid var(--blue-dark);
-  border-radius: 4px;
+  padding: 0.8rem 1rem 0.8rem 2.5rem;
+  background-color: #f5f5f5;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: var(--black);
+  box-sizing: border-box;
+}
+
+.search-input::placeholder {
+  color: #999;
+}
+
+.search-input:focus {
+  outline: none;
+  background-color: #efefef;
+}
+
+.search-icon {
+  position: absolute;
+  left: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
   font-size: 1rem;
 }
 
