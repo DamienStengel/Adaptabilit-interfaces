@@ -3,12 +3,20 @@ import Navigation from './components/Navigation'
 import ProductGrid from './components/ProductGrid'
 import Cart from './components/Cart'
 
-const App = () => {
-  const [activeCategory, setActiveCategory] = useState('BOISSON')
-  const [cartItems, setCartItems] = useState([])
-  const [searchQuery, setSearchQuery] = useState('')
+interface Item {
+  id: string
+  name: string
+  price: number
+  image: string
+  quantity: number
+}
 
-  const addToCart = (product) => {
+const App: React.FC = () => {
+  const [activeCategory, setActiveCategory] = useState<string>('BOISSON')
+  const [cartItems, setCartItems] = useState<Item[]>([])
+  const [searchQuery, setSearchQuery] = useState<string>('')
+
+  const addToCart = (product: Omit<Item, 'quantity'>) => {
     setCartItems(prev => {
       const existing = prev.find(item => item.id === product.id)
       if (existing) {

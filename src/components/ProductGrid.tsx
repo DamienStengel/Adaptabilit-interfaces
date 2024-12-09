@@ -1,6 +1,19 @@
 import React from 'react'
 
-const PRODUCTS = {
+interface Product {
+  id: string
+  name: string
+  price: number
+  image: string
+}
+
+interface ProductGridProps {
+  category: string
+  searchQuery: string
+  addToCart: (product: Product) => void
+}
+
+const PRODUCTS: Record<string, Product[]> = {
   ENTREE: [
     { id: 'E1', name: 'Salade César', price: 6.50, image: '🥗' },
     { id: 'E2', name: 'Soupe du jour', price: 5.00, image: '🥣' },
@@ -25,8 +38,8 @@ const PRODUCTS = {
   ]
 }
 
-const ProductGrid = ({ category, searchQuery, addToCart }) => {
-  const filterProducts = (products) => {
+const ProductGrid: React.FC<ProductGridProps> = ({ category, searchQuery, addToCart }) => {
+  const filterProducts = (products: Product[]) => {
     const query = searchQuery.toLowerCase()
     return products.filter(product => 
       product.name.toLowerCase().includes(query) ||
@@ -44,7 +57,7 @@ const ProductGrid = ({ category, searchQuery, addToCart }) => {
 
   const products = getProducts()
 
-  const getCategoryFromId = (id) => {
+  const getCategoryFromId = (id: string) => {
     return id.charAt(0) // Retourne la première lettre du code (E, P, D ou B)
   }
 
