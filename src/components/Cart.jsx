@@ -1,5 +1,5 @@
 import React from 'react'
-import { FaTimes, FaPlus, FaMinus, FaTrash, FaCreditCard, FaIdCard } from 'react-icons/fa'
+import { FaPlus, FaMinus, FaCreditCard, FaIdCard } from 'react-icons/fa'
 
 const Cart = ({ items, setCartItems }) => {
   const updateQuantity = (id, delta) => {
@@ -20,7 +20,6 @@ const Cart = ({ items, setCartItems }) => {
     <div className="cart">
       <div className="cart-header">
         <h2>Mon Panier</h2>
-        <button className="cart-close"><FaTimes /></button>
       </div>
 
       <div className="cart-items">
@@ -35,12 +34,6 @@ const Cart = ({ items, setCartItems }) => {
               <button onClick={() => updateQuantity(item.id, -1)}><FaMinus /></button>
               <span>{item.quantity}</span>
               <button onClick={() => updateQuantity(item.id, 1)}><FaPlus /></button>
-              <button 
-                className="delete-item"
-                onClick={() => setCartItems(prev => prev.filter(i => i.id !== item.id))}
-              >
-                <FaTrash />
-              </button>
             </div>
           </div>
         ))}

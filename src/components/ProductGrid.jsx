@@ -1,5 +1,4 @@
 import React from 'react'
-import { FaPlus } from 'react-icons/fa'
 
 const PRODUCTS = {
   ENTREE: [
@@ -28,8 +27,10 @@ const PRODUCTS = {
 
 const ProductGrid = ({ category, searchQuery, addToCart }) => {
   const filterProducts = (products) => {
+    const query = searchQuery.toLowerCase()
     return products.filter(product => 
-      product.name.toLowerCase().includes(searchQuery.toLowerCase())
+      product.name.toLowerCase().includes(query) ||
+      product.id.toLowerCase().includes(query)
     )
   }
 
@@ -43,6 +44,10 @@ const ProductGrid = ({ category, searchQuery, addToCart }) => {
 
   const products = getProducts()
 
+  const getCategoryFromId = (id) => {
+    return id.charAt(0) // Retourne la première lettre du code (E, P, D ou B)
+  }
+
   return (
     <div className="product-grid-container">
       {products.length === 0 ? (
@@ -51,15 +56,16 @@ const ProductGrid = ({ category, searchQuery, addToCart }) => {
         <div className="product-grid">
           {products.map(product => (
             <div key={product.id} className="product-card" onClick={() => addToCart(product)}>
-              <div className="product-id">{product.id}</div>
-              <div className="product-image">{product.image}</div>
-              <div className="product-info">
-                <h3>{product.name}</h3>
-                <p className="product-price">{product.price.toFixed(2)} €</p>
+              <div className="product-header">
+                <div 
+                  className="product-id"
+                  data-category={getCategoryFromId(product.id)}
+                >
+                  {product.id}
+                </div>
+                <div className="product-image">{product.image}</div>
               </div>
-              <button className="add-to-cart">
-                <FaPlus />
-              </button>
+              <div className="product-name">{product.name}</div>
             </div>
           ))}
         </div>
