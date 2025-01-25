@@ -359,3 +359,16 @@ body {
 .delete-button:hover {
   color: var(--orange);
 }
+.nav-button[data-admin="true"] {
+  margin-top: auto;
+  color: var(--blue-dark);
+}
+
+.nav-button[data-admin="true"]:hover {
+  background-color: rgba(0, 102, 255, 0.1);
+}
+
+.nav-button[data-admin="true"].active {
+  background-color: var(--blue-dark);
+  color: var(--white);
+}

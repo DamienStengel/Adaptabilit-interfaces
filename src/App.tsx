@@ -3,16 +3,20 @@ import Navigation from './components/Navigation'
 import ProductGrid from './components/ProductGrid'
 import Cart from './components/Cart'
 import SearchBar from './components/SearchBar/SearchBar'
+import {Route, Routes, useLocation} from "react-router-dom";
+import SubcategoryManager from "./components/SubcategoryManager.tsx";
 
 interface Item {
-  id: string
-  name: string
-  price: number
-  image: string
-  quantity: number
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  quantity: number;
 }
 
 const App: React.FC = () => {
+  const location = useLocation();
+  const isAdmin = location.pathname.startsWith('/admin');
   const [activeCategory, setActiveCategory] = useState<string>('BOISSON')
   const [cartItems, setCartItems] = useState<Item[]>([])
   const [searchQuery, setSearchQuery] = useState<string>('')
@@ -36,26 +40,31 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="app-container">
-      <Navigation 
-        activeCategory={activeCategory} 
-        setActiveCategory={setActiveCategory}
-      />
-      <div className="main-content">
-        <SearchBar 
-          value={searchQuery}
-          onChange={handleSearch}
-          placeholder="Rechercher un produit..."
+      <div className="app-container">
+        <Navigation
+            activeCategory={activeCategory}
+            setActiveCategory={setActiveCategory}
         />
-        <ProductGrid 
-          category={activeCategory}
-          searchQuery={searchQuery}
-          addToCart={addToCart}
-        />
+        <Routes>
+          <Route path="/" element={
+            <div className="main-content">
+              <SearchBar
+                  value={searchQuery}
+                  onChange={handleSearch}
+                  placeholder="Rechercher un produit..."
+              />
+              <ProductGrid
+                  category={activeCategory}
+                  searchQuery={searchQuery}
+                  addToCart={addToCart}
+              />
+            </div>
+          } />
+          <Route path="/admin/subcategories" element={<SubcategoryManager />} />
+        </Routes>
+        {!isAdmin && <Cart items={cartItems} setCartItems={setCartItems} />}
       </div>
-      <Cart items={cartItems} setCartItems={setCartItems} />
-    </div>
-  )
+  );
 }
 
 export default App 

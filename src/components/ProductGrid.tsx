@@ -1,90 +1,113 @@
-import React from 'react'
-
-interface Product {
-  id: string
-  name: string
-  price: number
-  image: string
-}
+import React, { useEffect, useState } from 'react';
+import {getProducts, getCategoryCode, transformAndSortProducts, Product} from '../services/product.service';
 
 interface ProductGridProps {
-  category: string
-  searchQuery: string
-  addToCart: (product: Product) => void
-}
-
-const PRODUCTS: Record<string, Product[]> = {
-  ENTREE: [
-    { id: 'E1', name: 'Salade César', price: 6.50, image: '🥗' },
-    { id: 'E2', name: 'Soupe du jour', price: 5.00, image: '🥣' },
-    { id: 'E3', name: 'Crudités', price: 4.50, image: '🥬' },
-    { id: 'E4', name: 'Pois chiches', price: 4.00, image: '🫘' },
-  ],
-  PLAT: [
-    { id: 'P1', name: 'Steak Frites', price: 12.50, image: '🥩' },
-    { id: 'P2', name: 'Poulet Rôti', price: 11.00, image: '🍗' },
-    { id: 'P3', name: 'Poisson Grillé', price: 13.50, image: '🐟' },
-    { id: 'P4', name: 'Pois cassés', price: 10.50, image: '🫘' },
-  ],
-  DESSERT: [
-    { id: 'D1', name: 'Tarte aux pommes', price: 4.50, image: '🥧' },
-    { id: 'D2', name: 'Crème brûlée', price: 5.00, image: '🍮' },
-    { id: 'D3', name: 'Fruit frais', price: 3.50, image: '🍎' },
-  ],
-  BOISSON: [
-    { id: 'B1', name: 'Eau minérale', price: 2.00, image: '💧' },
-    { id: 'B2', name: 'Soda', price: 2.50, image: '🥤' },
-    { id: 'B3', name: 'Café', price: 1.50, image: '☕' },
-  ]
+  category: string;
+  searchQuery: string;
+  addToCart: (product: Product) => void;
 }
 
 const ProductGrid: React.FC<ProductGridProps> = ({ category, searchQuery, addToCart }) => {
-  const filterProducts = (products: Product[]) => {
-    const query = searchQuery.toLowerCase()
-    return products.filter(product => 
-      product.name.toLowerCase().includes(query) ||
-      product.id.toLowerCase().includes(query)
-    )
-  }
+  const [products, setProducts] = useState<any[]>([]);
 
-  const getProducts = () => {
-    if (category === 'TOUT') {
-      const allProducts = Object.values(PRODUCTS).flat()
-      return filterProducts(allProducts)
-    }
-    return filterProducts(PRODUCTS[category] || [])
-  }
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await getProducts();
+        setProducts(transformAndSortProducts(data));
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
+    fetchProducts();
+  }, []);
 
-  const products = getProducts()
+  const filterProducts = () => {
+    return products.filter(product => {
+      const matchesCategory = category === 'TOUT' || getCategoryCode(product.category) === category;
+      const matchesSearch = !searchQuery ||
+          product.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          product.id.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesCategory && matchesSearch;
+    });
+  };
+
+  const filteredProducts = filterProducts();
 
   const getCategoryFromId = (id: string) => {
-    return id.charAt(0) // Retourne la première lettre du code (E, P, D ou B)
-  }
+    return id.charAt(0);
+  };
 
   return (
-    <div className="product-grid-container">
-      {products.length === 0 ? (
-        <div className="no-results">Aucun produit trouvé</div>
-      ) : (
-        <div className="product-grid">
-          {products.map(product => (
-            <div key={product.id} className="product-card" onClick={() => addToCart(product)}>
-              <div className="product-header">
-                <div 
-                  className="product-id"
-                  data-category={getCategoryFromId(product.id)}
-                >
-                  {product.id}
-                </div>
-                <div className="product-image">{product.image}</div>
-              </div>
-              <div className="product-name">{product.name}</div>
+      <div className="product-grid-container">
+        {filteredProducts.length === 0 ? (
+            <div className="no-results">Aucun produit trouvé</div>
+        ) : (
+            <div className="product-grid">
+              {filteredProducts.map(product => (
+                  <div
+                      key={product.id}
+                      className="product-card"
+                      onClick={() => addToCart(product)}
+                      style={{
+                        backgroundImage: `url(${product.image})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        position: 'relative',
+                        height: '200px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        overflow: 'hidden'
+                      }}
+                  >
+                    <div
+                        style={{
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          background: 'rgba(255, 255, 255, 0.85)',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          gap: '1rem',
+                          padding: '1rem'
+                        }}
+                    >
+                      <div
+                          className="product-id"
+                          data-category={getCategoryFromId(product.id)}
+                          style={{
+                            fontSize: '2rem',
+                            fontWeight: 'bold',
+                            textShadow: '2px 2px 4px rgba(0, 0, 0, 0.1)'
+                          }}
+                      >
+                        {product.id}
+                      </div>
+                      <div
+                          className="product-name"
+                          style={{
+                            textAlign: 'center',
+                            fontSize: '1.1rem',
+                            fontWeight: '500',
+                            color: 'var(--black)',
+                            textShadow: '1px 1px 2px rgba(0, 0, 0, 0.1)'
+                          }}
+                      >
+                        {product.fullName}
+                      </div>
+                    </div>
+                  </div>
+              ))}
             </div>
-          ))}
-        </div>
-      )}
-    </div>
-  )
-}
+        )}
+      </div>
+  );
+};
 
-export default ProductGrid 
+export default ProductGrid;
