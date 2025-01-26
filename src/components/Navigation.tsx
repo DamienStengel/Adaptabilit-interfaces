@@ -1,6 +1,7 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { FaUtensils, FaCoffee, FaIceCream, FaWineGlass, FaCog } from 'react-icons/fa'
+import './Navigation.scss';
 
 interface NavigationProps {
   activeCategory: string
@@ -8,7 +9,10 @@ interface NavigationProps {
 }
 
 const Navigation = ({ activeCategory, setActiveCategory }: NavigationProps) => {
+  const location = useLocation();
   const navigate = useNavigate();
+  const isAdmin = location.pathname.startsWith('/admin');
+
   const categories = [
     { id: 'TOUT', icon: <FaUtensils />, label: 'TOUT' },
     { id: 'ENTREE', icon: <FaWineGlass />, label: 'ENTRÉE' },
@@ -18,29 +22,26 @@ const Navigation = ({ activeCategory, setActiveCategory }: NavigationProps) => {
   ];
 
   return (
-      <nav className="navigation">
-        {categories.map(category => (
-            <button
-                key={category.id}
-                className={`nav-button ${activeCategory === category.id ? 'active' : ''}`}
-                onClick={() => {
-                  setActiveCategory(category.id);
-                  navigate('/');
-                }}
-            >
-              <span className="nav-icon">{category.icon}</span>
-              <span className="nav-label">{category.label}</span>
-            </button>
-        ))}
-
+    <nav className="navigation">
+      {categories.map(category => (
         <button
-            className="nav-button"
-            onClick={() => navigate('/admin/subcategories')}
+          key={category.id}
+          className={`nav-button ${activeCategory === category.id ? 'active' : ''}`}
+          onClick={() => setActiveCategory(category.id)}
         >
-          <span className="nav-icon"><FaCog /></span>
-          <span className="nav-label">Admin</span>
+          <span className="nav-icon">{category.icon}</span>
+          <span className="nav-label">{category.label}</span>
         </button>
-      </nav>
+      ))}
+      
+      <button 
+        className="admin-link"
+        onClick={() => navigate('/admin/subcategories')}
+      >
+        <FaCog />
+        <span>Administration</span>
+      </button>
+    </nav>
   );
 };
 

@@ -5,12 +5,9 @@ import Cart from './components/Cart'
 import SearchBar from './components/SearchBar/SearchBar'
 import {Route, Routes, useLocation} from "react-router-dom";
 import SubcategoryManager from "./components/SubcategoryManager.tsx";
+import { Product } from './services/product.service';
 
-interface Item {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
+export interface CartItem extends Product {
   quantity: number;
 }
 
@@ -18,10 +15,10 @@ const App: React.FC = () => {
   const location = useLocation();
   const isAdmin = location.pathname.startsWith('/admin');
   const [activeCategory, setActiveCategory] = useState<string>('BOISSON')
-  const [cartItems, setCartItems] = useState<Item[]>([])
+  const [cartItems, setCartItems] = useState<CartItem[]>([])
   const [searchQuery, setSearchQuery] = useState<string>('')
 
-  const addToCart = (product: Omit<Item, 'quantity'>) => {
+  const addToCart = (product: Product) => {
     setCartItems(prev => {
       const existing = prev.find(item => item.id === product.id)
       if (existing) {
@@ -40,30 +37,32 @@ const App: React.FC = () => {
   }
 
   return (
-      <div className="app-container">
+    <div className="app-container">
+      {!isAdmin && (
         <Navigation
-            activeCategory={activeCategory}
-            setActiveCategory={setActiveCategory}
+          activeCategory={activeCategory}
+          setActiveCategory={setActiveCategory}
         />
-        <Routes>
-          <Route path="/" element={
-            <div className="main-content">
-              <SearchBar
-                  value={searchQuery}
-                  onChange={handleSearch}
-                  placeholder="Rechercher un produit..."
-              />
-              <ProductGrid
-                  category={activeCategory}
-                  searchQuery={searchQuery}
-                  addToCart={addToCart}
-              />
-            </div>
-          } />
-          <Route path="/admin/subcategories" element={<SubcategoryManager />} />
-        </Routes>
-        {!isAdmin && <Cart items={cartItems} setCartItems={setCartItems} />}
-      </div>
+      )}
+      <Routes>
+        <Route path="/" element={
+          <div className="main-content">
+            <SearchBar
+              value={searchQuery}
+              onChange={handleSearch}
+              placeholder="Rechercher un produit..."
+            />
+            <ProductGrid
+              category={activeCategory}
+              searchQuery={searchQuery}
+              addToCart={addToCart}
+            />
+          </div>
+        } />
+        <Route path="/admin/subcategories" element={<SubcategoryManager />} />
+      </Routes>
+      {!isAdmin && <Cart items={cartItems} setCartItems={setCartItems} />}
+    </div>
   );
 }
 

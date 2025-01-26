@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {getProducts, getCategoryCode, transformAndSortProducts, Product} from '../services/product.service';
+import { getProducts, getCategoryCode, transformAndSortProducts, Product } from '../services/product.service';
 
 interface ProductGridProps {
   category: string;
@@ -8,7 +8,7 @@ interface ProductGridProps {
 }
 
 const ProductGrid: React.FC<ProductGridProps> = ({ category, searchQuery, addToCart }) => {
-  const [products, setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -26,16 +26,16 @@ const ProductGrid: React.FC<ProductGridProps> = ({ category, searchQuery, addToC
     return products.filter(product => {
       const matchesCategory = category === 'TOUT' || getCategoryCode(product.category) === category;
       const matchesSearch = !searchQuery ||
-          product.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          product.id.toLowerCase().includes(searchQuery.toLowerCase());
+        product.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.id.toString().includes(searchQuery.toLowerCase());
       return matchesCategory && matchesSearch;
     });
   };
 
   const filteredProducts = filterProducts();
 
-  const getCategoryFromId = (id: string) => {
-    return id.charAt(0);
+  const getCategoryFromId = (displayId: string) => {
+    return displayId?.charAt(0) || '';
   };
 
   return (
@@ -80,14 +80,14 @@ const ProductGrid: React.FC<ProductGridProps> = ({ category, searchQuery, addToC
                     >
                       <div
                           className="product-id"
-                          data-category={getCategoryFromId(product.id)}
+                          data-category={getCategoryFromId(product.displayId || '')}
                           style={{
                             fontSize: '2rem',
                             fontWeight: 'bold',
                             textShadow: '2px 2px 4px rgba(0, 0, 0, 0.1)'
                           }}
                       >
-                        {product.id}
+                        {product.displayId}
                       </div>
                       <div
                           className="product-name"

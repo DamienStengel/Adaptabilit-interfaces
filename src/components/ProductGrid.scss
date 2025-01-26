@@ -1,0 +1,21 @@
+.product-grid {
+  // ... autres styles existants
+
+  .product-id {
+    &[data-category="E"] {
+      color: #e11d48; // Rouge pour les entrées
+    }
+
+    &[data-category="P"] {
+      color: #0891b2; // Bleu pour les plats
+    }
+
+    &[data-category="D"] {
+      color: #7c3aed; // Violet pour les desserts
+    }
+
+    &[data-category="B"] {
+      color: #059669; // Vert pour les boissons
+    }
+  }
+} 
